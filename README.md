@@ -1,2 +1,2 @@
 # blogAPI
-blog template api tarafı
+blog sitesi api kısmı
