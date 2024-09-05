@@ -11,7 +11,6 @@ import session from "express-session";
 import SequelizeStore from 'connect-session-sequelize';
 import sequelize from '../db';
 
-
 dotenv.config({path: path.resolve(__dirname, '../.env')});
 
 // Port and express defination
@@ -32,7 +31,7 @@ app.use(
         saveUninitialized: false,
         resave: false, // 'false' olarak ayarlanmalı, çünkü 'touch' yöntemi destekleniyor
         cookie: {
-            domain: '.koscheiblog.com',
+            domain: env.COOKIE_DOMAIN,
             sameSite: 'strict', // strict olarak ayarlandı
             secure: false, // Canlı ortamda HTTPS kullanıldığı için secure true
             maxAge: 24 * 60 * 60 * 1000

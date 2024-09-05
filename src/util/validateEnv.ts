@@ -5,6 +5,7 @@ export default cleanEnv(process.env, {
     PORT: port(),
     WEBSITE_FULL_URL: url(),
     IMAGE_BASE_URL: url(),
+    COOKIE_DOMAIN:str(),
     // SESSION_SECRET: str(),
     // RESEND_API_KEY: str(),
     // JWT_SECRET_RSA: str(),
