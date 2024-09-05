@@ -402,5 +402,3 @@ ecosystem.config.json
 .idea*
 .DS_Store*
 
-!/public/
-!/public/uploads/
