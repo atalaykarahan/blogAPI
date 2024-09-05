@@ -401,3 +401,4 @@ FodyWeavers.xsd
 ecosystem.config.json
 .idea*
 .DS_Store*
+public
