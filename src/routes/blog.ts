@@ -34,7 +34,7 @@ const upload = multer({storage: storage, limits: {fileSize: 1024 * 1024}});
 router.post('/', requiresAuth, BlogController.createBlog)
 
 // get by id
-router.get('/:book_id', requiresAuth, BlogController.getBlogById)
+router.get('/:id', requiresAuth, BlogController.getBlogById)
 
 //update
 router.put("/", requiresAuth, BlogController.updateBlog);

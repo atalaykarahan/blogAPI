@@ -42,7 +42,7 @@ export const createBlog: RequestHandler<
 
 //#region GET BLOG BY ID
 export const getBlogById: RequestHandler = async (req, res, next) => {
-    const book_id = req.params.book_id;
+    const book_id = req.params.id;
     try {
         if (!book_id) {
             throw createHttpError(400, "Missing parameters");

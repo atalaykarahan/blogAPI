@@ -1,6 +1,7 @@
 import express, {NextFunction, Request, Response} from "express";
 import userRoutes from "./routes/user";
 import blogRoutes from "./routes/blog";
+import categoryRoutes from "./routes/category";
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 import env from "./util/validateEnv";
@@ -63,6 +64,9 @@ app.use("/api/v1/users", userRoutes);
 
 // Blog routes api/v1/blogs
 app.use("/api/v1/blogs", blogRoutes);
+
+// Category routes api/v1/categories
+app.use("/api/v1/categories", categoryRoutes);
 
 
 app.use((req, res, next) => {
