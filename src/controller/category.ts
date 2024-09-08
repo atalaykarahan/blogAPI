@@ -73,21 +73,21 @@ export const updateCategory: RequestHandler<
     }
 };
 //#endregion
-//
-// //#region DELETE FULL CATEGORY
-// export const deleteFullCategory: RequestHandler = async (req, res, next) => {
-//     const category_id = req.params.id;
-//     try {
-//         if (!category_id) {
-//             throw createHttpError(400, "Missing parameters");
-//         }
-//         const deletedCategory = await categoryService.deleteFullCategory(category_id);
-//         res.sendStatus(204);
-//     } catch (error) {
-//         next(error);
-//     }
-// }
-// //#endregion
+
+//#region DELETE CATEGORY
+export const deleteCategory: RequestHandler = async (req, res, next) => {
+    const category_id = req.params.id;
+    try {
+        if (!category_id) {
+            throw createHttpError(400, "Missing parameters");
+        }
+        const deletedCategory = await categoryService.deleteCategory(category_id);
+        res.sendStatus(204);
+    } catch (error) {
+        next(error);
+    }
+}
+//#endregion
 
 //#region GET ALL
 export const getAll: RequestHandler = async (req, res, next) => {

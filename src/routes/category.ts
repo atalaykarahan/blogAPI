@@ -17,7 +17,7 @@ router.get('/:id', requiresAuth, CategoryController.getCategoryById)
 router.put("/", requiresAuth, CategoryController.updateCategory);
 
 //delete
-// router.delete('/:id', requiresAuth, CategoryController.deleteFullCategory);
+router.delete('/:id', requiresAuth, CategoryController.deleteCategory);
 
 // get all
 router.get('/', requiresAuth, CategoryController.getAll)

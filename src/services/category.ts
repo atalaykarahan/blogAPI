@@ -57,60 +57,25 @@ class CategoryService {
 
     //#endregion
 
-    //
-    // //#region DELETE CATEGORY WITH PROP
-    // async deleteFullCategory(id: string) {
-    //     const t = await db.transaction();
-    //     try {
-    //         const category = await CategoryModel.findByPk(id, {transaction: t});
-    //
-    //         if (!category)
-    //             throw createHttpError(404, "Category not found");
-    //
-    //
-    //         // Category açıklamasındaki resim URL'lerini bul
-    //         const imageUrls = this.extractImageUrls(category.category_description);
-    //
-    //
-    //         if (imageUrls.length > 0) {
-    //             // Hem veritabanından hem de sunucudan resimleri sil
-    //             await Promise.all(imageUrls.map(async (url) => {
-    //                 // Veritabanındaki kaydı sil
-    //                 await fileService.destroy(url, t);
-    //             }));
-    //         }
-    //
-    //         await CategoryTagModel.destroy({
-    //             where: {category_id: category.category_id.toString()},
-    //             transaction: t
-    //         });
-    //
-    //         await CategoryCategoryModel.destroy({
-    //             where: {category_id: category.category_id.toString()},
-    //             transaction: t
-    //         });
-    //
-    //         // Category'u sil
-    //         await category.destroy({transaction: t});
-    //         await t.commit();
-    //         return true;
-    //     } catch (error) {
-    //         console.error('Category delete error; ', error);
-    //         await t.rollback();
-    //         throw createHttpError(500, "An error occurred while deleting the category.");
-    //     }
-    // }
-    //
-    //
-    // // Category açıklamasından resim URL'lerini çıkarmak için regex kullanan fonksiyon
-    // private extractImageUrls(description: string): string[] {
-    //     const urlPattern = /\/uploads\/[a-zA-Z0-9\-\_]+\.[a-zA-Z]{3,4}/g;
-    //     const matches = description.match(urlPattern);
-    //     return matches ? matches : [];
-    // }
-    //
-    //
-    // //#endregion
+
+    //#region DELETE CATEGORY
+    async deleteCategory(id: string) {
+        try {
+            const category = await CategoryModel.findByPk(id);
+
+            if (!category)
+                throw createHttpError(404, "Category not found");
+
+            // Category'u sil
+            await category.destroy();
+            return true;
+        } catch (error) {
+            console.error('Category delete error; ', error);
+            throw createHttpError(500, "An error occurred while deleting the category.");
+        }
+    }
+
+    //#endregion
 
     //#region GET FULL ALL CATEGORY WITH PROP
     async getAll() {
