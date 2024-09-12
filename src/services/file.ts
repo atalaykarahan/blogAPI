@@ -44,7 +44,7 @@ class FileService {
             const file = await FileModel.findOne({where: {file_url: file_url}, transaction: t});
 
             if (!file)
-                throw new Error("File not found");
+                return true;
 
             await file.destroy({transaction: t});
             const filePath = path.join(__dirname, '../../public/uploads', file.file_name);

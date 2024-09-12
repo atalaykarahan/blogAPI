@@ -2,6 +2,7 @@ import express, {NextFunction, Request, Response} from "express";
 import userRoutes from "./routes/user";
 import blogRoutes from "./routes/blog";
 import categoryRoutes from "./routes/category";
+import tagRoutes from "./routes/tag";
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 import env from "./util/validateEnv";
@@ -44,7 +45,7 @@ sessionStore.sync();
 
 app.use(
     cors({
-        origin: env.WEBSITE_FULL_URL,
+        origin: [env.WEBSITE_FULL_URL, "http://localhost:3000"],
         credentials: true,
     })
 );
@@ -61,12 +62,14 @@ app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
 // User routes api/v1/users
 app.use("/api/v1/users", userRoutes);
 
-
 // Blog routes api/v1/blogs
 app.use("/api/v1/blogs", blogRoutes);
 
 // Category routes api/v1/categories
 app.use("/api/v1/categories", categoryRoutes);
+
+// Category routes api/v1/tags
+app.use("/api/v1/tags", tagRoutes);
 
 
 app.use((req, res, next) => {

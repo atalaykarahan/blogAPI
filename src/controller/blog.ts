@@ -113,7 +113,7 @@ export const deleteFullBlog: RequestHandler = async (req, res, next) => {
 export const getAll: RequestHandler = async (req, res, next) => {
     try {
         const blog = await blogService.getAll();
-        res.status(201).json(blog);
+        res.status(200).json(blog);
     } catch (error) {
         next(error);
     }
@@ -126,7 +126,7 @@ export const getAllByStatus: RequestHandler = async (req, res, next) => {
     try {
         const blog = await blogService.getAllByStatus(status_id);
         ;
-        res.status(201).json(blog);
+        res.status(200).json(blog);
     } catch (error) {
         next(error);
     }

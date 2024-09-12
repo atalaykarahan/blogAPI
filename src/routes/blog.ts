@@ -34,7 +34,7 @@ const upload = multer({storage: storage, limits: {fileSize: 1024 * 1024}});
 router.post('/', requiresAuth, BlogController.createBlog)
 
 // get by id
-router.get('/:id', requiresAuth, BlogController.getBlogById)
+router.get('/:id', BlogController.getBlogById)
 
 //update
 router.put("/", requiresAuth, BlogController.updateBlog);
@@ -43,10 +43,10 @@ router.put("/", requiresAuth, BlogController.updateBlog);
 router.delete('/:id', requiresAuth, BlogController.deleteFullBlog);
 
 // get all
-router.get('/', requiresAuth, BlogController.getAll)
+router.get('/', BlogController.getAll)
 
 // get all by status
-router.get('/status/:status_id', requiresAuth, BlogController.getAllByStatus)
+router.get('/status/:status_id', BlogController.getAllByStatus)
 
 // upload file & photo
 router.post('/file', requiresAuth, upload.single("file"), BlogController.insertFile)

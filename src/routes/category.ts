@@ -1,9 +1,6 @@
 import express from "express";
 import * as CategoryController from "../controller/category";
 import {requiresAuth} from "../middleware/auth";
-import multer from "multer";
-import * as path from "node:path";
-import {v4 as uuidv4} from 'uuid';
 
 const router = express.Router();
 
@@ -20,9 +17,6 @@ router.put("/", requiresAuth, CategoryController.updateCategory);
 router.delete('/:id', requiresAuth, CategoryController.deleteCategory);
 
 // get all
-router.get('/', requiresAuth, CategoryController.getAll)
-
-// get all by status
-// router.get('/status/:status_id', requiresAuth, CategoryController.getAllByStatus)
+router.get('/', CategoryController.getAll)
 
 export default router;

@@ -47,7 +47,6 @@ class CategoryService {
 
             oldCategory.category_name = name;
             await oldCategory.save();
-
             return oldCategory;
         } catch (error) {
             console.error('Category update error; ', error);

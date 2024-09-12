@@ -1,18 +1,16 @@
 import {RequestHandler} from "express";
 import createHttpError from "http-errors";
-import {categoryService} from "../services/category";
-import {fileService} from "../services/file";
-import env from "../util/validateEnv"
+import {tagService} from "../services/tag";
 
-//#region CREATE CATEGORY
-export interface CreateCategoryBody {
+//#region CREATE TAG
+export interface CreateTagBody {
     name?: string;
 }
 
-export const createCategory: RequestHandler<
+export const createTag: RequestHandler<
     unknown,
     unknown,
-    CreateCategoryBody,
+    CreateTagBody,
     unknown
 > = async (req, res, next) => {
     const name = req.body.name;
@@ -22,40 +20,40 @@ export const createCategory: RequestHandler<
             throw createHttpError(400, "Missing parameters");
         }
 
-        const newCategory = await categoryService.create(name);
-        res.status(201).json(newCategory);
+        const newTag = await tagService.create(name);
+        res.status(201).json(newTag);
     } catch (error) {
         next(error);
     }
 };
 //#endregion
 
-//#region GET CATEGORY BY ID
-export const getCategoryById: RequestHandler = async (req, res, next) => {
-    const category_id = req.params.id;
+//#region GET TAG BY ID
+export const getTagById: RequestHandler = async (req, res, next) => {
+    const tag_id = req.params.id;
     try {
-        if (!category_id) {
+        if (!tag_id) {
             throw createHttpError(400, "Missing parameters");
         }
 
-        const category = await categoryService.findOneById(category_id);
-        res.status(201).json(category);
+        const tag = await tagService.findOneById(tag_id);
+        res.status(201).json(tag);
     } catch (error) {
         next(error);
     }
 };
 //#endregion
 
-//#region UPDATE CATEGORY
-export interface UpdateCategoryBody {
+//#region UPDATE TAG
+export interface UpdateTagBody {
     id?: string;
     name?: string;
 }
 
-export const updateCategory: RequestHandler<
+export const updateTag: RequestHandler<
     unknown,
     unknown,
-    UpdateCategoryBody,
+    UpdateTagBody,
     unknown
 > = async (req, res, next) => {
     const id = req.body.id;
@@ -66,22 +64,22 @@ export const updateCategory: RequestHandler<
             throw createHttpError(400, "Missing parameters");
         }
 
-        const updatedCategory = await categoryService.updateCategory(id, name);
-        res.status(201).json(updatedCategory);
+        const updatedTag = await tagService.updateTag(id, name);
+        res.status(201).json(updatedTag);
     } catch (error) {
         next(error);
     }
 };
 //#endregion
 
-//#region DELETE CATEGORY
-export const deleteCategory: RequestHandler = async (req, res, next) => {
-    const category_id = req.params.id;
+//#region DELETE TAG
+export const deleteTag: RequestHandler = async (req, res, next) => {
+    const tag_id = req.params.id;
     try {
-        if (!category_id) {
+        if (!tag_id) {
             throw createHttpError(400, "Missing parameters");
         }
-        const deletedCategory = await categoryService.deleteCategory(category_id);
+        const deletedTag = await tagService.deleteTag(tag_id);
         res.sendStatus(204);
     } catch (error) {
         next(error);
@@ -92,8 +90,8 @@ export const deleteCategory: RequestHandler = async (req, res, next) => {
 //#region GET ALL
 export const getAll: RequestHandler = async (req, res, next) => {
     try {
-        const category = await categoryService.getAll();
-        res.status(200).json(category);
+        const tag = await tagService.getAll();
+        res.status(200).json(tag);
     } catch (error) {
         next(error);
     }
@@ -104,9 +102,9 @@ export const getAll: RequestHandler = async (req, res, next) => {
 // export const getAllByStatus: RequestHandler = async (req, res, next) => {
 //     const status_id = req.params.status_id;
 //     try {
-//         const category = await categoryService.getAllByStatus(status_id);
+//         const tag = await tagService.getAllByStatus(status_id);
 //         ;
-//         res.status(201).json(category);
+//         res.status(201).json(tag);
 //     } catch (error) {
 //         next(error);
 //     }
