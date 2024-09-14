@@ -1,21 +1,10 @@
 import {RequestHandler} from "express";
 import createHttpError from "http-errors";
-import UserModel from "../models/user";
-import bcrypt from "bcrypt";
 import {userService} from "../services/user";
 
 //#region AUTHENTICATED USER
 export const authenticatedUser: RequestHandler = async (req, res, next) => {
-    try {
-        const user = await UserModel.findByPk(req.session.user_id);
-
-        if (!user)
-            throw createHttpError(401, "Invalid credentials");
-
-        res.sendStatus(200);
-    } catch (error) {
-        next(error);
-    }
+    res.sendStatus(200);
 };
 //#endregion AUTHENTICATED USER
 

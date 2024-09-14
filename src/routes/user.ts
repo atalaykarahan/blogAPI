@@ -1,5 +1,6 @@
 import express from "express";
 import * as UserController from "../controller/user";
+import {requiresAuth} from "../middleware/auth";
 
 const router = express.Router();
 
@@ -7,7 +8,7 @@ const router = express.Router();
 router.post("/login", UserController.login);
 
 //authorize
-router.get('/', UserController.authenticatedUser)
+router.get('/', requiresAuth, UserController.authenticatedUser)
 
 
 export default router;
