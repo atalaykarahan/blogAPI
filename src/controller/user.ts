@@ -37,15 +37,21 @@ export const login: RequestHandler<
 //#endregion LOGIN
 
 //#region LOGOUT
-// export const logout: RequestHandler = (req, res, next) => {
-//     req.session.destroy((error) => {
-//         if (error) {
-//             next(error);
-//         } else {
-//             res.sendStatus(200);
-//         }
-//     });
-// };
+export const logout: RequestHandler = (req, res, next) => {
+    req.session.destroy((error) => {
+        if (error) {
+            next(error);
+        } else {
+            // Oturumu yok ettikten sonra cookie'yi hemen geçersiz kıl
+            res.clearCookie('connect.sid', {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production', // Prod ortamında HTTPS gerektirir
+                expires: new Date(Date.now() - 1000) // Geçersiz kılmak için 1 saniye geçmiş bir tarih
+            });
+            res.sendStatus(200);
+        }
+    });
+};
 //#endregion LOGOUT
 
 //#region EMAIL VERIFIED

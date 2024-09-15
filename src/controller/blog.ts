@@ -9,8 +9,6 @@ export interface CreateBlogBody {
     title?: string;
     slug?: string;
     description?: string;
-    categories?: string[]; // categories number array
-    tags?: string[]; // tags number array
     status?: string; //bigint bir tur olmali
 }
 
@@ -23,16 +21,14 @@ export const createBlog: RequestHandler<
     const title = req.body.title;
     const slug = req.body.slug;
     const description = req.body.description;
-    const categories = req.body.categories;
-    const tags = req.body.tags;
     const status = req.body.status;
 
     try {
-        if (!title || !slug || !description || !categories || !tags || !status) {
+        if (!title || !slug || !description || !status) {
             throw createHttpError(400, "Missing parameters");
         }
 
-        const newBlog = await blogService.create(title, slug, description, categories, tags, status);
+        const newBlog = await blogService.create(title, slug, description, status);
         res.status(201).json(newBlog);
     } catch (error) {
         next(error);
@@ -62,8 +58,6 @@ export interface UpdateBlogBody {
     title?: string;
     slug?: string;
     description?: string;
-    categories?: string[]; // categories number array
-    tags?: string[]; // tags number array
     status?: string; //bigint bir tur olmali
 }
 
@@ -77,16 +71,14 @@ export const updateBlog: RequestHandler<
     const title = req.body.title;
     const slug = req.body.slug;
     const description = req.body.description;
-    const categories = req.body.categories;
-    const tags = req.body.tags;
     const status = req.body.status;
 
     try {
-        if (!id || !title || !slug || !description || !categories || !tags || !status) {
+        if (!id || !title || !slug || !description || !status) {
             throw createHttpError(400, "Missing parameters");
         }
 
-        const updatedBlog = await blogService.updateBlog(id, title, slug, description, categories, tags, status);
+        const updatedBlog = await blogService.updateBlog(id, title, slug, description, status);
         res.status(201).json(updatedBlog);
     } catch (error) {
         next(error);

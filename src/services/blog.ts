@@ -7,7 +7,7 @@ import {fileService} from "./file";
 
 class BlogService {
     //#region CREATE BLOG WITH PROP
-    async create(title: string, slug: string, description: string, categories: string[], tags: string[], status: string) {
+    async create(title: string, slug: string, description: string, status: string) {
         const t = await db.transaction();
         try {
             const createdBlog = await BlogModel.create({
@@ -16,18 +16,18 @@ class BlogService {
                 blog_description: description,
                 status_id: status
             }, {transaction: t});
-            await Promise.all(tags.map(async (tag_id) => {
-                await BlogTagModel.create(
-                    {blog_id: createdBlog.blog_id.toString(), tag_id: tag_id},
-                    {transaction: t}
-                );
-            }));
-            await Promise.all(categories.map(async (category_id) => {
-                await BlogCategoryModel.create(
-                    {blog_id: createdBlog.blog_id.toString(), category_id: category_id},
-                    {transaction: t}
-                );
-            }));
+            // await Promise.all(tags.map(async (tag_id) => {
+            //     await BlogTagModel.create(
+            //         {blog_id: createdBlog.blog_id.toString(), tag_id: tag_id},
+            //         {transaction: t}
+            //     );
+            // }));
+            // await Promise.all(categories.map(async (category_id) => {
+            //     await BlogCategoryModel.create(
+            //         {blog_id: createdBlog.blog_id.toString(), category_id: category_id},
+            //         {transaction: t}
+            //     );
+            // }));
 
             await t.commit();
             return createdBlog;
@@ -72,7 +72,7 @@ class BlogService {
     //#endregion
 
     //#region UPDATE BLOG WITH PROP
-    async updateBlog(id: string, title: string, slug: string, description: string, categories: string[], tags: string[], status: string) {
+    async updateBlog(id: string, title: string, slug: string, description: string, status: string) {
         const t = await db.transaction();
         try {
             const oldBlog = await BlogModel.findByPk(id);
@@ -96,29 +96,29 @@ class BlogService {
             }, {transaction: t});
 
             //#region TAG SECTION
-            await BlogTagModel.destroy({
-                where: {blog_id: id},
-                transaction: t
-            });
-            await Promise.all(tags.map(async (tag_id) => {
-                await BlogTagModel.create(
-                    {blog_id: id, tag_id: tag_id},
-                    {transaction: t}
-                );
-            }));
+            // await BlogTagModel.destroy({
+            //     where: {blog_id: id},
+            //     transaction: t
+            // });
+            // await Promise.all(tags.map(async (tag_id) => {
+            //     await BlogTagModel.create(
+            //         {blog_id: id, tag_id: tag_id},
+            //         {transaction: t}
+            //     );
+            // }));
             //#endregion
 
             //#region CATEGORY SECTION
-            await BlogCategoryModel.destroy({
-                where: {blog_id: id},
-                transaction: t
-            });
-            await Promise.all(categories.map(async (category_id) => {
-                await BlogCategoryModel.create(
-                    {blog_id: id, category_id: category_id},
-                    {transaction: t}
-                );
-            }));
+            // await BlogCategoryModel.destroy({
+            //     where: {blog_id: id},
+            //     transaction: t
+            // });
+            // await Promise.all(categories.map(async (category_id) => {
+            //     await BlogCategoryModel.create(
+            //         {blog_id: id, category_id: category_id},
+            //         {transaction: t}
+            //     );
+            // }));
             //#endregion
 
             // Hem veritabanından hem de sunucudan resimleri sil
@@ -160,15 +160,15 @@ class BlogService {
                 }));
             }
 
-            await BlogTagModel.destroy({
-                where: {blog_id: blog.blog_id.toString()},
-                transaction: t
-            });
-
-            await BlogCategoryModel.destroy({
-                where: {blog_id: blog.blog_id.toString()},
-                transaction: t
-            });
+            // await BlogTagModel.destroy({
+            //     where: {blog_id: blog.blog_id.toString()},
+            //     transaction: t
+            // });
+            //
+            // await BlogCategoryModel.destroy({
+            //     where: {blog_id: blog.blog_id.toString()},
+            //     transaction: t
+            // });
 
             // Blog'u sil
             await blog.destroy({transaction: t});
@@ -196,20 +196,20 @@ class BlogService {
     async getAll() {
         try {
             const blog = await BlogModel.findAll({
-                include: [
-                    {
-                        model: CategoryModel,
-                        as: 'categories', // Belirtilen alias ismi
-                        attributes: ['category_id', 'category_name'], // Getirmek istediğiniz alanlar
-                        through: {attributes: []} // Ara tablodan veri istemiyorsanız boş bırakın
-                    },
-                    {
-                        model: TagModel,
-                        as: 'tags', // Belirtilen alias ismi
-                        attributes: ['tag_id', 'tag_name'], // Getirmek istediğiniz alanlar
-                        through: {attributes: []} // Ara tablodan veri istemiyorsanız boş bırakın
-                    }
-                ]
+                // include: [
+                //     {
+                //         model: CategoryModel,
+                //         as: 'categories', // Belirtilen alias ismi
+                //         attributes: ['category_id', 'category_name'], // Getirmek istediğiniz alanlar
+                //         through: {attributes: []} // Ara tablodan veri istemiyorsanız boş bırakın
+                //     },
+                //     {
+                //         model: TagModel,
+                //         as: 'tags', // Belirtilen alias ismi
+                //         attributes: ['tag_id', 'tag_name'], // Getirmek istediğiniz alanlar
+                //         through: {attributes: []} // Ara tablodan veri istemiyorsanız boş bırakın
+                //     }
+                // ]
             });
             if (!blog)
                 throw createHttpError(404, "Blog not found");
@@ -227,20 +227,20 @@ class BlogService {
     async getAllByStatus(status_id: string) {
         try {
             const blog = await BlogModel.findAll({
-                include: [
-                    {
-                        model: CategoryModel,
-                        as: 'categories', // Belirtilen alias ismi
-                        attributes: ['category_id', 'category_name'], // Getirmek istediğiniz alanlar
-                        through: {attributes: []} // Ara tablodan veri istemiyorsanız boş bırakın
-                    },
-                    {
-                        model: TagModel,
-                        as: 'tags', // Belirtilen alias ismi
-                        attributes: ['tag_id', 'tag_name'], // Getirmek istediğiniz alanlar
-                        through: {attributes: []} // Ara tablodan veri istemiyorsanız boş bırakın
-                    }
-                ],
+                // include: [
+                //     {
+                //         model: CategoryModel,
+                //         as: 'categories', // Belirtilen alias ismi
+                //         attributes: ['category_id', 'category_name'], // Getirmek istediğiniz alanlar
+                //         through: {attributes: []} // Ara tablodan veri istemiyorsanız boş bırakın
+                //     },
+                //     {
+                //         model: TagModel,
+                //         as: 'tags', // Belirtilen alias ismi
+                //         attributes: ['tag_id', 'tag_name'], // Getirmek istediğiniz alanlar
+                //         through: {attributes: []} // Ara tablodan veri istemiyorsanız boş bırakın
+                //     }
+                // ],
                 where: {status_id: status_id}
             });
             if (!blog)

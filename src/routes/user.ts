@@ -7,6 +7,9 @@ const router = express.Router();
 //login
 router.post("/login", UserController.login);
 
+//logout
+router.post("/logout", requiresAuth, UserController.logout);
+
 //authorize
 router.get('/', requiresAuth, UserController.authenticatedUser)
 

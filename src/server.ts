@@ -35,7 +35,7 @@ app.use(
         cookie: {
             domain: env.COOKIE_DOMAIN,
             sameSite: 'strict', // strict olarak ayarlandı
-            secure: false, // Canlı ortamda HTTPS kullanıldığı için secure true
+            secure: process.env.NODE_ENV === 'production', // Canlı ortamda HTTPS kullanıldığı için secure true
             maxAge: 24 * 60 * 60 * 1000
         }
     })
@@ -66,10 +66,10 @@ app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/blogs", blogRoutes);
 
 // Category routes api/v1/categories
-app.use("/api/v1/categories", categoryRoutes);
+// app.use("/api/v1/categories", categoryRoutes);
 
 // Category routes api/v1/tags
-app.use("/api/v1/tags", tagRoutes);
+// app.use("/api/v1/tags", tagRoutes);
 
 
 app.use((req, res, next) => {
