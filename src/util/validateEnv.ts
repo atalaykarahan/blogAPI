@@ -4,6 +4,7 @@ export default cleanEnv(process.env, {
     POSTGRE_CONNECTION_STRING: str(),
     PORT: port(),
     WEBSITE_FULL_URL: url(),
+    PANEL_FULL_URL: url(),
     IMAGE_BASE_URL: url(),
     COOKIE_DOMAIN:str(),
 });

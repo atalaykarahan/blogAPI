@@ -45,7 +45,7 @@ sessionStore.sync();
 
 app.use(
     cors({
-        origin: [env.WEBSITE_FULL_URL, "http://localhost:3000"],
+        origin: [env.WEBSITE_FULL_URL, env.PANEL_FULL_URL, "http://localhost:3000"],
         credentials: true,
     })
 );
