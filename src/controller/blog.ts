@@ -125,6 +125,33 @@ export const getAllByStatus: RequestHandler = async (req, res, next) => {
 };
 //#endregion
 
+//#region GET BLOG BY SLUG
+export const getBlogBySlug: RequestHandler = async (req, res, next) => {
+    const book_slug = req.params.slug;
+    try {
+        if (!book_slug) {
+            throw createHttpError(400, "Missing parameters");
+        }
+
+        const blog = await blogService.findOneBySlug(book_slug);
+        res.status(200).json(blog);
+    } catch (error) {
+        next(error);
+    }
+};
+//#endregion
+
+//#region GET HOME PAGE BLOGS
+export const getHomepageBlogs: RequestHandler = async (req, res, next) => {
+    try {
+        const blog = await blogService.getHomePageBlogs();
+        res.status(200).json(blog);
+    } catch (error) {
+        next(error);
+    }
+};
+//#endregion
+
 //#region INSERT FILE
 export const insertFile: RequestHandler = async (req, res, next) => {
 

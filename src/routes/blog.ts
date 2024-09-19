@@ -1,7 +1,6 @@
 import express from "express";
 import * as BlogController from "../controller/blog";
 import {requiresAuth} from "../middleware/auth";
-import {getAll} from "../controller/blog";
 import multer from "multer";
 import * as path from "node:path";
 import {v4 as uuidv4} from 'uuid';
@@ -34,21 +33,29 @@ const upload = multer({storage: storage, limits: {fileSize: 1024 * 1024}});
 router.post('/', requiresAuth, BlogController.createBlog)
 
 // get by id
-router.get('/:id', BlogController.getBlogById)
+router.get('/blog/:id', BlogController.getBlogById)
 
 //update
 router.put("/", requiresAuth, BlogController.updateBlog);
 
 //delete
-router.delete('/:id', requiresAuth, BlogController.deleteFullBlog);
+router.delete('/blog/:id', requiresAuth, BlogController.deleteFullBlog);
 
 // get all
-router.get('/', BlogController.getAll)
+router.get('/', requiresAuth, BlogController.getAll);
+
+
+// get all published
+router.get('/homepage', BlogController.getHomepageBlogs);
 
 // get all by status
-router.get('/status/:status_id', BlogController.getAllByStatus)
+router.get('/status/:status_id', requiresAuth, BlogController.getAllByStatus);
 
 // upload file & photo
 router.post('/file', requiresAuth, upload.single("file"), BlogController.insertFile)
+
+// get by slug
+router.get('/slug/:slug', BlogController.getBlogBySlug)
+
 
 export default router;

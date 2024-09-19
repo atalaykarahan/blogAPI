@@ -1,7 +1,6 @@
 import createHttpError from "http-errors";
 import db from "../../db";
-import BlogTagModel from "../models/blog_tag";
-import {BlogCategoryModel, BlogModel, CategoryModel, TagModel} from "../models/associations";
+import {BlogModel, CategoryModel, TagModel} from "../models/associations";
 import {fileService} from "./file";
 
 
@@ -16,18 +15,6 @@ class BlogService {
                 blog_description: description,
                 status_id: status
             }, {transaction: t});
-            // await Promise.all(tags.map(async (tag_id) => {
-            //     await BlogTagModel.create(
-            //         {blog_id: createdBlog.blog_id.toString(), tag_id: tag_id},
-            //         {transaction: t}
-            //     );
-            // }));
-            // await Promise.all(categories.map(async (category_id) => {
-            //     await BlogCategoryModel.create(
-            //         {blog_id: createdBlog.blog_id.toString(), category_id: category_id},
-            //         {transaction: t}
-            //     );
-            // }));
 
             await t.commit();
             return createdBlog;
@@ -94,33 +81,6 @@ class BlogService {
                 blog_description: description,
                 status_id: status,
             }, {transaction: t});
-
-            //#region TAG SECTION
-            // await BlogTagModel.destroy({
-            //     where: {blog_id: id},
-            //     transaction: t
-            // });
-            // await Promise.all(tags.map(async (tag_id) => {
-            //     await BlogTagModel.create(
-            //         {blog_id: id, tag_id: tag_id},
-            //         {transaction: t}
-            //     );
-            // }));
-            //#endregion
-
-            //#region CATEGORY SECTION
-            // await BlogCategoryModel.destroy({
-            //     where: {blog_id: id},
-            //     transaction: t
-            // });
-            // await Promise.all(categories.map(async (category_id) => {
-            //     await BlogCategoryModel.create(
-            //         {blog_id: id, category_id: category_id},
-            //         {transaction: t}
-            //     );
-            // }));
-            //#endregion
-
             // Hem veritabanından hem de sunucudan resimleri sil
             await Promise.all(imagesToDelete.map(async (url) => {
                 // Veritabanındaki kaydı sil
@@ -160,16 +120,6 @@ class BlogService {
                 }));
             }
 
-            // await BlogTagModel.destroy({
-            //     where: {blog_id: blog.blog_id.toString()},
-            //     transaction: t
-            // });
-            //
-            // await BlogCategoryModel.destroy({
-            //     where: {blog_id: blog.blog_id.toString()},
-            //     transaction: t
-            // });
-
             // Blog'u sil
             await blog.destroy({transaction: t});
             await t.commit();
@@ -195,22 +145,7 @@ class BlogService {
     //#region GET FULL ALL BLOG WITH PROP
     async getAll() {
         try {
-            const blog = await BlogModel.findAll({
-                // include: [
-                //     {
-                //         model: CategoryModel,
-                //         as: 'categories', // Belirtilen alias ismi
-                //         attributes: ['category_id', 'category_name'], // Getirmek istediğiniz alanlar
-                //         through: {attributes: []} // Ara tablodan veri istemiyorsanız boş bırakın
-                //     },
-                //     {
-                //         model: TagModel,
-                //         as: 'tags', // Belirtilen alias ismi
-                //         attributes: ['tag_id', 'tag_name'], // Getirmek istediğiniz alanlar
-                //         through: {attributes: []} // Ara tablodan veri istemiyorsanız boş bırakın
-                //     }
-                // ]
-            });
+            const blog = await BlogModel.findAll({});
             if (!blog)
                 throw createHttpError(404, "Blog not found");
 
@@ -226,26 +161,9 @@ class BlogService {
     //#region GET BLOG BY STATUS WITH PROP
     async getAllByStatus(status_id: string) {
         try {
-            const blog = await BlogModel.findAll({
-                // include: [
-                //     {
-                //         model: CategoryModel,
-                //         as: 'categories', // Belirtilen alias ismi
-                //         attributes: ['category_id', 'category_name'], // Getirmek istediğiniz alanlar
-                //         through: {attributes: []} // Ara tablodan veri istemiyorsanız boş bırakın
-                //     },
-                //     {
-                //         model: TagModel,
-                //         as: 'tags', // Belirtilen alias ismi
-                //         attributes: ['tag_id', 'tag_name'], // Getirmek istediğiniz alanlar
-                //         through: {attributes: []} // Ara tablodan veri istemiyorsanız boş bırakın
-                //     }
-                // ],
-                where: {status_id: status_id}
-            });
+            const blog = await BlogModel.findAll({where: {status_id: status_id}});
             if (!blog)
                 throw createHttpError(404, "Blog not found");
-
             return blog;
         } catch (error) {
             console.error('Database error during get all blog: ', error);
@@ -253,6 +171,57 @@ class BlogService {
         }
     }
 
+    //#endregion
+
+    //#region GET BLOG BY SLUG WITH PROP
+    async findOneBySlug(slug: string) {
+        try {
+            const blog = await BlogModel.findOne({
+                where: {blog_slug: slug, status_id: 2},
+            });
+            if (!blog)
+                throw createHttpError(404, "Blog not found");
+
+            return blog;
+        } catch (error) {
+            console.error('Database error during blog search: ', error);
+            throw createHttpError(500, "An error occurred while searching for the blog. Please try again later.");
+        }
+    }
+
+    //#endregion
+
+    //#region GET BLOG BY STATUS WITH PROP
+    async getHomePageBlogs() {
+        try {
+            // status = 2 olamlı
+            const blogs = await BlogModel.findAll({
+                where: {status_id: 2},
+                order: [['updatedAt', 'DESC']]
+            });
+            if (!blogs)
+                throw createHttpError(404, "Blog not found");
+
+
+            const imageUrlPattern = /(https?:\/\/[^\s]+\.(?:jpg|jpeg|png|gif))/g;
+            const blogWithImages = blogs.map((blog: any) => {
+                const blogData = blog.toJSON();
+
+                const imageUrls = blog.blog_description.match(imageUrlPattern);
+
+
+                if (imageUrls && imageUrls.length > 0) {
+                    blogData.blog_cover_image = imageUrls[0];
+                }
+                return blogData;
+
+            })
+            return blogWithImages;
+        } catch (error) {
+            console.error('Database error during get all blog: ', error);
+            throw createHttpError(500, "An error occurred while get all for the blog. Please try again later.");
+        }
+    }
 
     //#endregion
 
